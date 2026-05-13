@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const RefundRequestModal = ({ isOpen, onClose, booking }) => {
+const RefundRequestModal = ({ isOpen, onClose, onConfirmRefund, booking }) => {
   const [reason, setReason] = useState("");
 
   if (!isOpen || !booking) return null;
@@ -19,8 +19,8 @@ const RefundRequestModal = ({ isOpen, onClose, booking }) => {
           <div className="flex justify-between items-center bg-[#F5F3F3] rounded-xl p-4">
             <div>
               <p className="text-xs text-gray-500">From</p>
-              <p className="font-bold">{booking.from}</p>
-              <p className="text-sm text-gray-500">{booking.departure_time}</p>
+              <p className="font-bold">{booking.origin}</p>
+              <p className="text-sm text-gray-500">{booking.departureTime}</p>
             </div>
 
             <div className="flex items-center w-32 gap-2">
@@ -31,8 +31,8 @@ const RefundRequestModal = ({ isOpen, onClose, booking }) => {
 
             <div className="text-right">
               <p className="text-xs text-gray-500">To</p>
-              <p className="font-bold">{booking.to}</p>
-              <p className="text-sm text-gray-500">{booking.arrival_time}</p>
+              <p className="font-bold">{booking.destination}</p>
+              <p className="text-sm text-gray-500">{booking.arrivalTime}</p>
             </div>
           </div>
 
@@ -60,7 +60,7 @@ const RefundRequestModal = ({ isOpen, onClose, booking }) => {
           <div className="border rounded-xl p-4 space-y-3 text-sm">
             <div className="flex justify-between">
               <span>Fare Paid</span>
-              <span>{booking.price}</span>
+              <span>₹{booking.totalFare}</span>
             </div>
 
             <div className="flex justify-between">
@@ -70,13 +70,16 @@ const RefundRequestModal = ({ isOpen, onClose, booking }) => {
 
             <div className="flex justify-between font-bold text-[#005CAB] text-lg">
               <span>Refund</span>
-              <span>{booking.price}</span>
+              <span>₹{booking.totalFare}</span>
             </div>
           </div>
         </div>
 
         <div className="p-6 flex gap-4 border-t">
-          <button className="flex-1 py-3 rounded-xl bg-linear-to-r from-[#005CAB] to-[#0075D7] text-white font-bold">
+          <button
+            onClick={onConfirmRefund}
+            className="flex-1 py-3 rounded-xl bg-linear-to-r from-[#005CAB] to-[#0075D7] text-white font-bold"
+          >
             Confirm Refund
           </button>
 

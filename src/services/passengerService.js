@@ -50,3 +50,20 @@ export const requestRefund = async (bookingId) => {
   const response = await api.post(`/passenger/refunds/${bookingId}`);
   return response.data;
 };
+
+export const updateProfile = async (payload) => {
+  const response = await api.put("/passenger/profile", payload);
+  return response.data;
+};
+
+export const updatePassword = async (payload) => {
+  const response = await api.put("/passenger/password", payload);
+  return response.data;
+};
+
+export const addMoneyToWallet = async (amount) => {
+  const response = await api.post("/passenger/wallet/add", null, {
+    params: { amount },
+  });
+  return response.data;
+};

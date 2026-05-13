@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { routeActions } from "../../../store/passenger/routeSlice";
 
-const FilterSidebar = ({ onApply }) => {
-  const [selectedTypes, setSelectedTypes] = useState([]);
-  const [fare, setFare] = useState(2000);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
+const FilterSidebar = () => {
+  const dispatch = useDispatch();
+
+  const filters = useSelector((state) => state.route.filters);
+
+  const [selectedTypes, setSelectedTypes] = useState(filters.types);
+  const [fare, setFare] = useState(filters.maxFare);
+  const [selectedAmenities, setSelectedAmenities] = useState(filters.amenities);
 
   const busTypes = [
     "AC Sleeper",
@@ -26,17 +32,21 @@ const FilterSidebar = ({ onApply }) => {
   };
 
   const handleApply = () => {
-    onApply({
-      types: selectedTypes,
-      maxFare: fare,
-      amenities: selectedAmenities,
-    });
+    dispatch(
+      routeActions.setFilters({
+        types: selectedTypes,
+        maxFare: Number(fare),
+        amenities: selectedAmenities,
+      }),
+    );
   };
 
   const handleReset = () => {
     setSelectedTypes([]);
     setFare(2000);
     setSelectedAmenities([]);
+
+    dispatch(routeActions.resetFilters());
   };
 
   return (

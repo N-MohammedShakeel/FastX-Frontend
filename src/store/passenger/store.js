@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import profileSlice from "./profile-slice";
-import bookingSlice from "./booking-slice";
-import routeSlice from "./route-slice";
-import seatSlice from "./seat-slice";
-import uiSlice from "./ui-slice";
+import profileSlice from "./profileSlice";
+import bookingSlice from "./bookingSlice";
+import routeSlice from "./routeSlice";
+import seatSlice from "./seatSlice";
+import notificationSlice from "./notificationSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,7 +12,7 @@ const store = configureStore({
     booking: bookingSlice.reducer,
     route: routeSlice.reducer,
     seat: seatSlice.reducer,
-    ui: uiSlice.reducer,
+    notification: notificationSlice.reducer,
   },
 });
 

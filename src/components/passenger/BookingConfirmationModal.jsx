@@ -10,7 +10,6 @@ const BookingConfirmationModal = ({ isOpen, onClose, booking }) => {
     setIsTicketOpen(true);
   };
 
-  console.log(booking);
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xl">

@@ -38,7 +38,7 @@ const SearchWidget = () => {
   };
 
   return (
-    <div className="bg-[#F5F3F3] p-5 sm:p-6 md:p-8 rounded-xl space-y-6 w-full shadow-sm">
+    <div className="bg-[#ffffff] p-5 sm:p-6 md:p-8 rounded-xl space-y-7 w-full shadow-sm">
       <div className="flex items-center gap-3">
         <i className="fa-solid fa-bus text-[#005CAB]"></i>
 

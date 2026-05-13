@@ -6,75 +6,45 @@ import SearchWidget from "../../components/passenger/searchWidget";
 import WalletD1 from "../../components/passenger/WalletD1";
 import PromoBanner from "../../components/passenger/PromoBanner";
 import { PassengerSidebarContent } from "../../components/passenger/PassengerSidebarContent";
-import {
-  getProfile,
-  getPassengerBookings,
-} from "../../services/passengerService";
 import TicketDetailsModal from "../../components/passenger/TicketDetailsModal ";
-
-const notifications = [
-  {
-    id: 1,
-    title: "Booking Confirmed",
-    message: "Your trip is confirmed",
-    time: "2 min ago",
-    icon: "fa-check",
-    bg: "bg-green-100",
-    color: "text-green-700",
-  },
-  {
-    id: 2,
-    title: "Refund Processed",
-    message: "Refund of ₹899 has been processed",
-    time: "1 hour ago",
-    icon: "fa-indian-rupee-sign",
-    bg: "bg-blue-100",
-    color: "text-blue-700",
-  },
-  {
-    id: 3,
-    title: "Reminder",
-    message: "Trip tomorrow",
-    time: "Yesterday",
-    icon: "fa-bell",
-    bg: "bg-orange-100",
-    color: "text-orange-700",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchProfile,
+  fetchPassengerBookings,
+} from "../../store/passenger/passenger-actions";
+import { bookingActions } from "../../store/passenger/bookingSlice";
+import Loading from "../../components/common/Loading";
+import Error from "../../components/common/Error";
+import { notificationActions } from "../../store/passenger/notificationSlice";
 
 export default function PassengerDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [profile, setProfile] = useState(null);
-  const [trips, setTrips] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedBooking, setSelectedBooking] = useState(null);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [recentBookings, setRecentBookings] = useState(1);
+
+  const dispatch = useDispatch();
+
+  const profile = useSelector((state) => state.profile.profile);
+  const trips = useSelector((state) => state.booking.allBookings);
+  const selectedBooking = useSelector((state) => state.booking.selectedBooking);
+  const notification = useSelector((state) => state.notification.notifications);
+
+  const profileLoading = useSelector((state) => state.profile.loading);
+  const bookingLoading = useSelector((state) => state.booking.loading);
+
+  const profileError = useSelector((state) => state.profile.error);
+  const bookingError = useSelector((state) => state.booking.error);
 
   const bookingsPerPage = 2;
-
   const totalPages = Math.ceil(trips.length / bookingsPerPage);
-  const startIndex = (currentPage - 1) * bookingsPerPage;
+  const startIndex = (recentBookings - 1) * bookingsPerPage;
   const endIndex = startIndex + bookingsPerPage;
   const paginatedTrips = trips.slice(startIndex, endIndex);
 
   useEffect(() => {
-    const fetchPassengerData = async () => {
-      try {
-        const profileResponse = await getProfile();
-        const bookingResponse = await getPassengerBookings();
-
-        setProfile(profileResponse.data);
-        setTrips(bookingResponse.data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPassengerData();
-  }, []);
+    dispatch(fetchProfile());
+    dispatch(fetchPassengerBookings());
+  }, [dispatch]);
 
   const upcomingTrip = trips
     ?.filter(
@@ -84,9 +54,36 @@ export default function PassengerDashboard() {
     )
     .sort((a, b) => new Date(a.departureTime) - new Date(b.departureTime))[0];
 
+  const formatRelativeTime = (date) => {
+    if (!date) return "";
+
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
+
+    if (diffInSeconds < 60) {
+      return "Just now";
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} ${diffInMinutes === 1 ? "min" : "mins"} ago`;
+    }
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours} ${diffInHours === 1 ? "hour" : "hours"} ago`;
+    }
+
+    return new Date(date).toLocaleDateString();
+  };
+
   const handleViewTicket = (booking) => {
-    setSelectedBooking(booking);
+    dispatch(bookingActions.setSelectedBooking(booking));
     setIsTicketOpen(true);
+  };
+
+  const handleClearNotifications = () => {
+    dispatch(notificationActions.clearAllNotifications());
   };
 
   return (
@@ -122,7 +119,12 @@ export default function PassengerDashboard() {
               </p>
             </div>
 
-            <WalletD1 balance={profile?.wallet} />
+            {profileError && <Error message={profileError} />}
+            {profileLoading ? (
+              <Loading />
+            ) : (
+              <WalletD1 balance={profile?.wallet} />
+            )}
           </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
@@ -130,42 +132,63 @@ export default function PassengerDashboard() {
               <SearchWidget />
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md">
+            <div className=" bg-white rounded-xl p-6 shadow-md">
               <div className="flex justify-between mb-4">
                 <h3 className="text-2xl font-bold">Notifications</h3>
-                <span className="text-[#005CAB] text-md font-bold">
+                <button
+                  onClick={handleClearNotifications}
+                  className="text-[#005CAB] text-md font-bold hover:underline"
+                >
                   Clear all
-                </span>
+                </button>
               </div>
 
-              <div className="space-y-4 text-sm">
-                {notifications.map((item) => (
-                  <div key={item.id} className="flex gap-3">
+              <div className="space-y-1 text-xs max-h-40 overflow-y-auto custom-scrollbar pr-1">
+                {notification.length > 0 ? (
+                  notification.map((item) => (
                     <div
-                      className={`h-10 w-10 rounded-full flex items-center justify-center ${item.bg}`}
+                      key={item.id}
+                      className="flex gap-2 py-1 animate-in fade-in slide-in-from-right-4 border-b border-slate-50 last:border-0"
                     >
-                      <i
-                        className={`fa-solid ${item.icon} text-xl font-bold ${item.color}`}
-                      ></i>
-                    </div>
+                      <div
+                        className={`h-8 w-8 shrink-0 rounded-full flex items-center justify-center ${item.bg}`}
+                      >
+                        <i
+                          className={`fa-solid ${item.icon} text-sm font-bold ${item.color}`}
+                        ></i>
+                      </div>
 
-                    <div>
-                      <p className="font-semibold">{item.title}</p>
-                      <p className="text-slate-500">{item.message}</p>
-                      <p className="text-xs text-slate-400">{item.time}</p>
+                      <div className="leading-tight">
+                        <p className="font-semibold text-slate-900 truncate max-w-50">
+                          {item.title}
+                        </p>
+                        <p className="text-slate-500 line-clamp-1">
+                          {item.message}
+                        </p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">
+                          {formatRelativeTime(item.time)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="  text-center text-slate-400 py-2">
+                    No new notifications
+                  </p>
+                )}
               </div>
             </div>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="relative w-full max-w-sm">
-              <div className="absolute inset-0 bg-[#005CAB] rounded-xl transform rotate-[1.5deg]" />
+              <div className="absolute inset-0 bg-[#005CAB] rounded-xl transform rotate-2" />
 
               <div className="relative bg-white rounded-xl shadow-xl p-6 flex flex-col justify-between h-full space-y-6">
-                {upcomingTrip ? (
+                {bookingError && <Error message={bookingError} />}
+                {bookingLoading ? (
+                  <Loading />
+                ) : upcomingTrip ? (
                   <>
                     <div className="space-y-4">
                       <span className="bg-[#D5E3FF] text-[#001C3B] text-[10px] font-bold px-3 py-1 rounded-full tracking-wide uppercase">
@@ -251,86 +274,97 @@ export default function PassengerDashboard() {
                 </span>
               </div>
               <div className="overflow-y-auto max-h-80">
-                <table className="w-full text-sm">
-                  <thead className="text-xs uppercase text-slate-500">
-                    <tr>
-                      <th className="py-2 text-left font-black">Bus Details</th>
-                      <th className="text-left font-black">Booking Date</th>
-                      <th className="text-left font-black">Status</th>
-                      <th className="text-right font-black">Price</th>
-                    </tr>
-                  </thead>
+                {bookingError && <Error message={bookingError} />}
+                {bookingLoading ? (
+                  <Loading message="Loading bookings..." />
+                ) : (
+                  <table className="w-full text-sm">
+                    <thead className="text-xs uppercase text-slate-500">
+                      <tr>
+                        <th className="py-2 text-left font-black">
+                          Bus Details
+                        </th>
+                        <th className="text-left font-black">Booking Date</th>
+                        <th className="text-left font-black">Status</th>
+                        <th className="text-right font-black">Price</th>
+                      </tr>
+                    </thead>
 
-                  <tbody>
-                    {paginatedTrips.length > 0 ? (
-                      paginatedTrips.map((trip) => (
-                        <tr
-                          className="cursor-pointer hover:bg-slate-50 transition"
-                          onClick={() => handleViewTicket(trip)}
-                          key={trip.bookingId}
-                        >
-                          <td className="py-3 font-bold">
-                            {trip.busName}
-                            <br />
-
-                            <span className="text-xs text-slate-400">
-                              {trip.busNumber}
-                            </span>
-                          </td>
-
-                          <td className="text-slate-600 font-medium">
-                            {new Date(trip.bookingTime).toLocaleDateString(
-                              "en-IN",
-                              {
-                                month: "short",
-                                day: "2-digit",
-                                year: "numeric",
-                              },
-                            )}
-                          </td>
-
-                          <td
-                            className={`text-sm font-semibold ${
-                              trip.status === "CONFIRMED"
-                                ? "text-green-600"
-                                : "text-red-700"
-                            }`}
+                    <tbody>
+                      {paginatedTrips.length > 0 ? (
+                        paginatedTrips.map((trip) => (
+                          <tr
+                            className="cursor-pointer hover:bg-slate-50 transition"
+                            onClick={() => handleViewTicket(trip)}
+                            key={trip.bookingId}
                           >
-                            <p
-                              className={`rounded-full inline px-2 ${
+                            <td className="py-3 font-bold">
+                              {trip.busName}
+                              <br />
+
+                              <span className="text-xs text-slate-400">
+                                {trip.busNumber}
+                              </span>
+                            </td>
+
+                            <td className="text-slate-600 font-medium">
+                              {new Date(trip.bookingTime).toLocaleDateString(
+                                "en-IN",
+                                {
+                                  month: "short",
+                                  day: "2-digit",
+                                  year: "numeric",
+                                },
+                              )}
+                            </td>
+
+                            <td
+                              className={`text-sm font-semibold ${
                                 trip.status === "CONFIRMED"
-                                  ? "bg-green-200"
-                                  : "bg-red-200"
+                                  ? "text-green-600"
+                                  : trip.status === "PROCESSING"
+                                    ? "text-yellow-600"
+                                    : "text-red-700"
                               }`}
                             >
-                              {trip.status}
-                            </p>
-                          </td>
+                              <p
+                                className={`rounded-full inline px-2 ${
+                                  trip.status === "CONFIRMED"
+                                    ? "bg-green-200"
+                                    : trip.status === "PROCESSING"
+                                      ? "bg-yellow-200"
+                                      : "bg-red-200"
+                                }`}
+                              >
+                                {trip.status}
+                              </p>
+                            </td>
 
-                          <td className="text-right font-bold">
-                            ₹{trip.totalFare.toFixed(2)}
+                            <td className="text-right font-bold">
+                              ₹{trip.totalFare.toFixed(2)}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan="4"
+                            className="text-center py-10 text-slate-400 font-medium"
+                          >
+                            No bookings found
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="4"
-                          className="text-center py-10 text-slate-400 font-medium"
-                        >
-                          No bookings found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                      )}
+                    </tbody>
+                  </table>
+                )}
               </div>
               <div className="flex justify-center items-center gap-3 mt-5">
                 <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((prev) => prev - 1)}
+                  disabled={recentBookings === 1}
+                  onClick={() => setRecentBookings((prev) => prev - 1)}
                   className={`px-4 py-2 rounded-lg text-sm font-semibold ${
-                    currentPage === 1
+                    recentBookings === 1
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-[#005CAB] text-white"
                   }`}
@@ -339,14 +373,14 @@ export default function PassengerDashboard() {
                 </button>
 
                 <span className="text-sm font-semibold text-slate-600">
-                  Page {currentPage} of {totalPages || 1}
+                  Page {recentBookings} of {totalPages || 1}
                 </span>
 
                 <button
-                  disabled={currentPage === totalPages || totalPages === 0}
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  disabled={recentBookings === totalPages || totalPages === 0}
+                  onClick={() => setRecentBookings((prev) => prev + 1)}
                   className={`px-4 py-2 rounded-lg text-sm font-semibold ${
-                    currentPage === totalPages || totalPages === 0
+                    recentBookings === totalPages || totalPages === 0
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-[#005CAB] text-white"
                   }`}

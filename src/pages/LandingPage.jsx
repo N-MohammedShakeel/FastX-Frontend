@@ -107,7 +107,7 @@ const LandingPage = () => {
 
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
             {routes.map((route) => (
-              <PopularRoutesCard route={route} />
+              <PopularRoutesCard key={route.title} route={route} />
             ))}
           </div>
         </div>

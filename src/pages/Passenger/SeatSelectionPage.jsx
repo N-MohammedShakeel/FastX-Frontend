@@ -5,7 +5,11 @@ import BackButton from "../../components/common/BackButton";
 import { Legend } from "../../components/passenger/SeatSelectionComponents/Legend";
 import { BusLayout } from "../../components/passenger/SeatSelectionComponents/BusLayout";
 import { SeatSelectionSummary } from "../../components/passenger/SeatSelectionComponents/SeatSelectionSummary";
-import { getAvailableSeats } from "../../services/passengerService";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSeats } from "../../store/passenger/passenger-actions";
+import { seatActions } from "../../store/passenger/seatSlice";
+import Loading from "../../components/common/Loading";
+import Error from "../../components/common/Error";
 
 export default function SeatSelectionPage() {
   const { busId } = useParams();
@@ -13,66 +17,22 @@ export default function SeatSelectionPage() {
 
   const busData = location.state;
 
-  const [selected, setSelected] = useState([]);
-  const [seats, setSeats] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const seats = useSelector((state) => state.seat.seats);
+  const selectedSeats = useSelector((state) => state.seat.selectedSeats);
+
+  const seatLoading = useSelector((state) => state.seat.loading);
+  const seatError = useSelector((state) => state.seat.error);
 
   useEffect(() => {
-    const fetchSeats = async () => {
-      try {
-        setLoading(true);
-
-        const response = await getAvailableSeats(busId);
-        const availableSeats = response.data || [];
-        const generatedSeats = [];
-        const totalSeats = busData?.noOfSeats || 40;
-
-        for (let i = 1; i <= totalSeats; i++) {
-          generatedSeats.push({
-            id: i,
-            type: busData?.sleeper ? "sleeper" : "seater",
-            status: availableSeats.includes(i) ? "available" : "booked",
-          });
-
-          if (i % 4 === 2) {
-            generatedSeats.push(null);
-          }
-        }
-
-        setSeats(generatedSeats);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSeats();
-  }, [busId]);
+    dispatch(seatActions.clearSeats());
+    dispatch(fetchSeats(busId, busData));
+  }, [busId, busData, dispatch]);
 
   const handleSelect = (id) => {
-    const clickedSeat = seats.find((s) => s?.id === id);
-
-    if (clickedSeat?.status === "booked") {
-      return;
-    }
-
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
-    );
+    dispatch(seatActions.toggleSeat(id));
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FBF9F9] flex items-center justify-center">
-        <div className="text-center">
-          <div className="h-12 w-12 border-4 border-[#005CAB] border-t-transparent rounded-full animate-spin mx-auto"></div>
-
-          <p className="mt-4 text-slate-500">Loading seats...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#FBF9F9]">
@@ -135,20 +95,29 @@ export default function SeatSelectionPage() {
           <div className="flex-1 space-y-6">
             <Legend />
 
-            <BusLayout
-              seats={seats}
-              onSelect={handleSelect}
-              selectedSeats={selected}
-            />
+            {seatError && <Error message={seatError} />}
+            {seatLoading ? (
+              <Loading message="Loading Seats ..." />
+            ) : (
+              <BusLayout
+                seats={seats}
+                onSelect={handleSelect}
+                selectedSeats={selectedSeats}
+              />
+            )}
           </div>
 
           <div className="lg:sticky lg:top-25 h-fit">
-            <SeatSelectionSummary
-              selectedSeats={selected}
-              fare={busData?.fare}
-              busId={busId}
-              busData={busData}
-            />
+            {seatLoading ? (
+              <Loading message="Calculating Summary ..." />
+            ) : (
+              <SeatSelectionSummary
+                selectedSeats={selectedSeats}
+                fare={busData?.fare}
+                busId={busId}
+                busData={busData}
+              />
+            )}
           </div>
         </div>
       </div>

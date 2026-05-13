@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const PromoBanner = () => {
+  const navigate = useNavigate();
   return (
     <>
       <div className="relative rounded-2xl overflow-hidden h-55 flex items-center px-6 lg:px-12">
@@ -20,7 +22,10 @@ const PromoBanner = () => {
             Discover amazing routes and travel experiences across India.
           </p>
 
-          <button className="bg-white text-[#005CAB] px-6 py-3 rounded-xl font-bold">
+          <button
+            onClick={() => navigate("/search")}
+            className="bg-white text-[#005CAB] px-6 py-3 rounded-xl font-bold hover:animate-pulse"
+          >
             Explore Now
           </button>
         </div>

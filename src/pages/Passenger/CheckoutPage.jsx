@@ -5,60 +5,46 @@ import BookingSummary from "../../components/passenger/CheckoutPageComponents/Bo
 import BackButton from "../../components/common/BackButton";
 import Navbar from "../../components/common/Navbar";
 import BookingConfirmationModal from "../../components/passenger/BookingConfirmationModal";
-import { createBooking, getProfile } from "../../services/passengerService";
+import { useDispatch, useSelector } from "react-redux";
+import { bookTicket } from "../../store/passenger/passenger-actions";
+import Error from "../../components/common/Error";
+import Loading from "../../components/common/Loading";
 
 const CheckoutPage = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState(null);
-  const [bookingData, setBookingData] = useState(null);
+  const [isBookingConfirmationModalOpen, setIsBookingConfirmationModalOpen] =
+    useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
   const bookingInfo = location.state;
+
+  const dispatch = useDispatch();
+
+  const profile = useSelector((state) => state.profile.profile);
+  const bookingResponse = useSelector((state) => state.booking.bookingResponse);
+
+  const profileLoading = useSelector((state) => state.profile.loading);
+  const profileError = useSelector((state) => state.profile.error);
+  const bookingLoading = useSelector((state) => state.booking.loading);
+  const bookingError = useSelector((state) => state.booking.error);
 
   useEffect(() => {
     if (!bookingInfo) {
       navigate("/passenger-dashboard");
       return;
     }
-
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        setProfile(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  console.log(bookingInfo);
+  }, [navigate, bookingInfo]);
 
   const handleBooking = async () => {
-    try {
-      setLoading(true);
+    const payload = {
+      busId: bookingInfo.busId,
+      totalFare: bookingInfo.totalFare,
+      totalNoOfSeats: bookingInfo.totalNoOfSeats,
+      seatNumbers: bookingInfo.selectedSeats,
+    };
 
-      const payload = {
-        busId: bookingInfo.busId,
-        totalFare: bookingInfo.totalFare,
-        totalNoOfSeats: bookingInfo.totalNoOfSeats,
-        seatNumbers: bookingInfo.selectedSeats,
-      };
-
-      const response = await createBooking(payload);
-      const booked = response.data;
-      setBookingData(booked);
-      setIsOpen(true);
-    } catch (error) {
-      console.log(error);
-
-      alert(error.response?.data?.message || "Booking failed");
-    } finally {
-      setLoading(false);
-    }
+    await dispatch(bookTicket(payload));
+    setIsBookingConfirmationModalOpen(true);
   };
 
   return (
@@ -82,29 +68,41 @@ const CheckoutPage = () => {
               </p>
             </div>
 
-            <PaymentSection
-              balance={Number(profile?.wallet) || 0}
-              total={Number(bookingInfo?.totalFare) || 0}
-            />
+            {profileError && <Error message={profileError} />}
+
+            {profileLoading ? (
+              <Loading message="Loading Profile ..." />
+            ) : (
+              <PaymentSection
+                balance={Number(profile?.wallet) || 0}
+                total={Number(bookingInfo?.totalFare) || 0}
+              />
+            )}
           </div>
 
           <div className="lg:sticky lg:top-22 h-fit">
-            <BookingSummary
-              bookingInfo={bookingInfo}
-              onConfirm={handleBooking}
-              loading={loading}
-            />
+            {bookingError && <Error message={bookingError} />}
+
+            {bookingLoading ? (
+              <Loading message="Processing Booking ..." />
+            ) : (
+              <BookingSummary
+                bookingInfo={bookingInfo}
+                onConfirm={handleBooking}
+                loading={bookingLoading}
+              />
+            )}
           </div>
         </div>
       </div>
 
       <BookingConfirmationModal
-        isOpen={isOpen}
+        isOpen={isBookingConfirmationModalOpen}
         onClose={() => {
-          setIsOpen(false);
+          setIsBookingConfirmationModalOpen(false);
           navigate("/bookings");
         }}
-        booking={bookingData}
+        booking={bookingResponse}
       />
     </div>
   );

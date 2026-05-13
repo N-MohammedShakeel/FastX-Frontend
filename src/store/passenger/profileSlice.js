@@ -16,6 +16,7 @@ const profileSlice = createSlice({
 
     setProfile(state, action) {
       state.profile = action.payload;
+      console.log("Profile updated in store:", state.profile);
     },
 
     setError(state, action) {

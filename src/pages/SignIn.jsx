@@ -51,11 +51,11 @@ export default function SignIn() {
 
   const navigateByRole = (role) => {
     if (role === "ADMIN") {
-      navigate("/admin-dashboard");
+      navigate("/admin-dashboard", { replace: true });
     } else if (role === "OPERATOR") {
-      navigate("/operator-dashboard");
+      navigate("/operator-dashboard", { replace: true });
     } else {
-      navigate("/passenger-dashboard");
+      navigate("/passenger-dashboard", { replace: true });
     }
   };
 

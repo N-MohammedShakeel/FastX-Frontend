@@ -6,12 +6,18 @@ const seatSlice = createSlice({
   initialState: {
     seats: [],
     selectedSeats: [],
+    busData: null,
     loading: false,
+    error: null,
   },
 
   reducers: {
     setSeats(state, action) {
       state.seats = action.payload;
+    },
+
+    setBusData(state, action) {
+      state.busData = action.payload;
     },
 
     toggleSeat(state, action) {
@@ -34,6 +40,10 @@ const seatSlice = createSlice({
 
     setLoading(state, action) {
       state.loading = action.payload;
+    },
+
+    setError(state, action) {
+      state.error = action.payload;
     },
   },
 });

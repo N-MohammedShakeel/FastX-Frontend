@@ -8,67 +8,53 @@ import TicketDetailsModal from "../../components/passenger/TicketDetailsModal ";
 import WalletD1 from "../../components/passenger/WalletD1";
 import PromoCard from "../../components/passenger/PromoCard";
 import { PassengerSidebarContent } from "../../components/passenger/PassengerSidebarContent";
-import {
-  getActiveBookings,
-  getPastBookings,
-  requestRefund,
-  getProfile,
-} from "../../services/passengerService";
 import PastBookingCard from "../../components/passenger/BookingManagementComponents/PastBookingCard";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchProfile,
+  fetchActiveBookings,
+  fetchPastBookings,
+  refundBooking,
+} from "../../store/passenger/passenger-actions";
+import { bookingActions } from "../../store/passenger/bookingSlice";
+import Loading from "../../components/common/Loading";
+import Error from "../../components/common/Error";
 
 export default function BookingManagement() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState(null);
   const [isRefundOpen, setIsRefundOpen] = useState(false);
   const [isTicketOpen, setIsTicketOpen] = useState(false);
-  const [bookings, setBookings] = useState([]);
-  const [pastBookings, setPastBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const profile = useSelector((state) => state.profile.profile);
+  const activeBookings = useSelector((state) => state.booking.activeBookings);
+  const pastBookings = useSelector((state) => state.booking.pastBookings);
+  const selectedBooking = useSelector((state) => state.booking.selectedBooking);
+
+  const profileLoading = useSelector((state) => state.profile.loading);
+  const profileError = useSelector((state) => state.profile.error);
+  const bookingLoading = useSelector((state) => state.booking.loading);
+  const bookingError = useSelector((state) => state.booking.error);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        setLoading(true);
+    dispatch(fetchProfile());
+    dispatch(fetchActiveBookings());
+    dispatch(fetchPastBookings());
+  }, [dispatch]);
 
-        const profileResponse = await getProfile();
-        setProfile(profileResponse.data);
+  const handleCancel = (booking) => {
+    dispatch(bookingActions.setSelectedBooking(booking));
+    setIsRefundOpen(true);
+  };
 
-        const activeResponse = await getActiveBookings();
-        const pastResponse = await getPastBookings();
-
-        const now = new Date();
-        const oneWeekLater = new Date();
-        oneWeekLater.setDate(now.getDate() + 7);
-
-        const upcomingTrips = activeResponse.data.filter((booking) => {
-          const bookingDate = new Date(booking.departureTime);
-          return bookingDate <= oneWeekLater;
-        });
-
-        setBookings(upcomingTrips);
-        setPastBookings(pastResponse.data || []);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBookings();
-  }, []);
-
-  const handleCancel = async (booking) => {
-    try {
-      await requestRefund(booking.bookingId);
-      alert("Refund requested successfully");
-    } catch (error) {
-      console.log(error);
-      alert(error.response?.data?.message || "Refund failed");
-    }
+  const handleConfirmRefund = async () => {
+    await dispatch(refundBooking(selectedBooking));
+    setIsRefundOpen(false);
   };
 
   const handleView = (booking) => {
-    setSelectedBooking(booking);
+    dispatch(bookingActions.setSelectedBooking(booking));
     setIsTicketOpen(true);
   };
 
@@ -102,34 +88,35 @@ export default function BookingManagement() {
               </h1>
 
               <p className="text-sm sm:text-base text-slate-700 mt-1 sm:mt-2">
-                Welcome back ms you have 2 upcoming trips.
+                Welcome back {profile?.name || "there"}! You have{" "}
+                {activeBookings.length} upcoming trips.
               </p>
             </div>
 
-            <WalletD1 balance={profile?.wallet} />
+            {profileError ? <Error message={profileError} /> : null}
+            {profileLoading ? (
+              <Loading />
+            ) : (
+              <WalletD1 balance={profile?.wallet} />
+            )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 lg:gap-10">
-            <div>
+            <div className="bg-white rounded-xl p-6 sm:p-8 lg:p-10 shadow-lg">
               <div className="flex justify-between items-center mb-4 sm:mb-6">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">
                   Upcoming Trips
                 </h2>
-
-                <button className="text-[#0167c0] text-sm sm:text-base font-semibold">
-                  View All
-                </button>
               </div>
 
-              <div className="space-y-4 sm:space-y-6">
-                {loading ? (
-                  <div className="bg-white rounded-xl p-10 text-center shadow">
-                    <div className="h-12 w-12 border-4 border-[#005CAB] border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  </div>
-                ) : bookings.length > 0 ? (
-                  bookings.map((b) => (
+              <div className="space-y-4 sm:space-y-6 max-h-175 overflow-y-auto custom-scrollbar pr-2 ">
+                {bookingError && <Error message={bookingError} />}
+                {bookingLoading ? (
+                  <Loading message="Loading trips..." />
+                ) : activeBookings.length > 0 ? (
+                  activeBookings.map((b) => (
                     <BookingCard
-                      key={b.id}
+                      key={b.bookingId}
                       booking={b}
                       onCancel={handleCancel}
                       onView={handleView}
@@ -152,10 +139,13 @@ export default function BookingManagement() {
                   Past Bookings
                 </h2>
 
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-3 sm:space-y-4 max-h-175 overflow-y-auto custom-scrollbar pr-2">
                   {pastBookings.length > 0 ? (
-                    pastBookings.map((item) => (
-                      <PastBookingCard key={item.bookingId} booking={item} />
+                    pastBookings.map((booking) => (
+                      <PastBookingCard
+                        key={booking.bookingId}
+                        booking={booking}
+                      />
                     ))
                   ) : (
                     <div className="bg-[#F5F3F3] rounded-xl p-8 text-center">
@@ -183,6 +173,7 @@ export default function BookingManagement() {
         isOpen={isRefundOpen}
         onClose={() => setIsRefundOpen(false)}
         booking={selectedBooking}
+        onConfirmRefund={handleConfirmRefund}
       />
 
       <TicketDetailsModal

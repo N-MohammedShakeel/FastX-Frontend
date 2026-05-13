@@ -2,7 +2,7 @@ import React from "react";
 
 const BookingCard = ({ booking, onCancel, onView }) => {
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 shadow space-y-4 sm:space-y-6 relative">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4 sm:space-y-6 relative">
       <div className="flex items-start sm:items-center gap-3 sm:gap-1">
         <div className="bg-[#F5F3F3] border border-[#eae8e8] rounded-xl w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 flex flex-col items-center justify-center p-1 sm:p-2">
           <span className="text-[10px] sm:text-xs text-[#404754]">

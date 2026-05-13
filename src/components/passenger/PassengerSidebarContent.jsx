@@ -17,6 +17,12 @@ export const PassengerSidebarContent = ({ onClose }) => {
     if (onClose) onClose();
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userEmail");
+    navigate("/signin");
+  };
   const menu = [
     { name: "Dashboard", icon: <FaHome />, path: "/passenger-dashboard" },
     { name: "Find Trips", icon: <FaSearch />, path: "/search" },
@@ -59,7 +65,7 @@ export const PassengerSidebarContent = ({ onClose }) => {
 
       <div className="border-t border-slate-200 pt-4">
         <div
-          onClick={() => navigate("/signin")}
+          onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-3 text-red-500 hover:bg-red-50 rounded-xl cursor-pointer"
         >
           <FaSignOutAlt />
