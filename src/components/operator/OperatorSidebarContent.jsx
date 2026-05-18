@@ -1,14 +1,20 @@
 import React from "react";
 import {
   FaHome,
-  FaSearch,
+  FaBus,
+  FaRoute,
   FaTicketAlt,
-  FaUser,
+  FaChartLine,
+  FaWallet,
+  FaUsers,
+  FaCog,
   FaSignOutAlt,
+  FaUser,
 } from "react-icons/fa";
+
 import { useNavigate, useLocation } from "react-router-dom";
 
-export const PassengerSidebarContent = ({ onClose }) => {
+const OperatorSidebarContent = ({ onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,25 +23,53 @@ export const PassengerSidebarContent = ({ onClose }) => {
     if (onClose) onClose();
   };
 
+  const menu = [
+    {
+      name: "Dashboard",
+      icon: <FaHome />,
+      path: "/operator-dashboard",
+    },
+
+    {
+      name: "Bus Management",
+      icon: <FaBus />,
+      path: "/operator/bus",
+    },
+
+    {
+      name: "Routes",
+      icon: <FaRoute />,
+      path: "/operator/route",
+    },
+
+    {
+      name: "Bookings",
+      icon: <FaTicketAlt />,
+      path: "/operator/booking",
+    },
+
+    {
+      name: "Refunds",
+      icon: <FaWallet />,
+      path: "/operator/refund",
+    },
+
+    { name: "Profile", icon: <FaUser />, path: "/operator/profile" },
+  ];
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userEmail");
     navigate("/signin");
   };
-  const menu = [
-    { name: "Dashboard", icon: <FaHome />, path: "/passenger-dashboard" },
-    { name: "Find Trips", icon: <FaSearch />, path: "/passenger/search" },
-    { name: "Bookings", icon: <FaTicketAlt />, path: "/passenger/booking" },
-    { name: "Profile", icon: <FaUser />, path: "/passenger/profile" },
-  ];
 
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="space-y-6">
         <div className="px-3">
           <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide">
-            Menu
+            MENU
           </h2>
         </div>
 
@@ -48,6 +82,7 @@ export const PassengerSidebarContent = ({ onClose }) => {
                 key={i}
                 onClick={() => handleNavigate(item.path)}
                 className={`flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200
+                  
                   ${
                     isActive
                       ? "bg-blue-50 text-[#005CAB] shadow-sm"
@@ -62,7 +97,6 @@ export const PassengerSidebarContent = ({ onClose }) => {
           })}
         </nav>
       </div>
-
       <div className="border-t border-slate-200 pt-4">
         <div
           onClick={handleLogout}
@@ -75,3 +109,5 @@ export const PassengerSidebarContent = ({ onClose }) => {
     </div>
   );
 };
+
+export default OperatorSidebarContent;

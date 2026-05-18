@@ -62,8 +62,13 @@ export const updatePassword = async (payload) => {
 };
 
 export const addMoneyToWallet = async (amount) => {
-  const response = await api.post("/passenger/wallet/add", null, {
+  const response = await api.put("/passenger/wallet/add", null, {
     params: { amount },
   });
+  return response.data;
+};
+
+export const deleteBus = async (id) => {
+  const response = await api.delete(`/operator/bus/${id}`);
   return response.data;
 };

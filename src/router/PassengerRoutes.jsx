@@ -3,8 +3,8 @@ import PassengerDashboard from "../pages/Passenger/PassengerDashboard";
 import BookingManagement from "../pages/Passenger/BookingManagement";
 import UserProfile from "../pages/Passenger/Profile";
 import SearchTickets from "../pages/Passenger/SearchTickets";
-import CheckoutPage from "../pages/Passenger/CheckoutPage";
-import SeatSelectionPage from "../pages/Passenger/SeatSelectionPage";
+import CheckoutPage from "../pages/Passenger/Checkout";
+import SeatSelectionPage from "../pages/Passenger/SeatSelection";
 import ProtectedRoute from "./ProtectedRoute";
 import { Routes, Route } from "react-router-dom";
 
@@ -21,7 +21,7 @@ const PassengerRoutes = () => {
           }
         />
         <Route
-          path="/bookings"
+          path="/passenger/booking"
           element={
             <ProtectedRoute>
               <BookingManagement />
@@ -29,7 +29,7 @@ const PassengerRoutes = () => {
           }
         />
         <Route
-          path="/profile"
+          path="/passenger/profile"
           element={
             <ProtectedRoute>
               <UserProfile />
@@ -37,7 +37,7 @@ const PassengerRoutes = () => {
           }
         />
         <Route
-          path="/search"
+          path="/passenger/search"
           element={
             <ProtectedRoute>
               <SearchTickets />
@@ -45,7 +45,7 @@ const PassengerRoutes = () => {
           }
         />
         <Route
-          path="/checkout"
+          path="/passenger/checkout"
           element={
             <ProtectedRoute>
               <CheckoutPage />
@@ -53,7 +53,7 @@ const PassengerRoutes = () => {
           }
         />
         <Route
-          path="/seat-selection/:busId"
+          path="/passenger/seat-selection/:busId"
           element={
             <ProtectedRoute>
               <SeatSelectionPage />

@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Custom Scrollbar for the Notification Area */
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
 }

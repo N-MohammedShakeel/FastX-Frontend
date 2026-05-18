@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TicketDetailsModal from "./TicketDetailsModal ";
+import TicketDetailsModal from "../common/TicketDetailsModal ";
 
 const BookingConfirmationModal = ({ isOpen, onClose, booking }) => {
   const [isTicketOpen, setIsTicketOpen] = useState(false);

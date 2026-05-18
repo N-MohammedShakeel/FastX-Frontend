@@ -23,7 +23,7 @@ const PromoBanner = () => {
           </p>
 
           <button
-            onClick={() => navigate("/search")}
+            onClick={() => navigate("/passenger/search")}
             className="bg-white text-[#005CAB] px-6 py-3 rounded-xl font-bold hover:animate-pulse"
           >
             Explore Now

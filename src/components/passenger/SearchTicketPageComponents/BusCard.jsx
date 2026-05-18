@@ -95,7 +95,7 @@ const BusCard = ({ bus }) => {
 
           <button
             onClick={() =>
-              navigate(`/seat-selection/${bus.busId}`, {
+              navigate(`/passenger/seat-selection/${bus.busId}`, {
                 state: bus,
               })
             }

@@ -3,10 +3,9 @@ import { FaWallet, FaCalendarAlt, FaArrowRight } from "react-icons/fa";
 import Sidebar from "../../components/common/Sidebar";
 import Navbar from "../../components/common/Navbar";
 import SearchWidget from "../../components/passenger/searchWidget";
-import WalletD1 from "../../components/passenger/WalletD1";
+import WalletD1 from "../../components/common/WalletD1";
 import PromoBanner from "../../components/passenger/PromoBanner";
 import { PassengerSidebarContent } from "../../components/passenger/PassengerSidebarContent";
-import TicketDetailsModal from "../../components/passenger/TicketDetailsModal ";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProfile,
@@ -16,6 +15,7 @@ import { bookingActions } from "../../store/passenger/bookingSlice";
 import Loading from "../../components/common/Loading";
 import Error from "../../components/common/Error";
 import { notificationActions } from "../../store/passenger/notificationSlice";
+import TicketDetailsModal from "../../components/common/TicketDetailsModal ";
 
 export default function PassengerDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

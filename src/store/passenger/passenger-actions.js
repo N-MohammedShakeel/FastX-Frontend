@@ -85,11 +85,11 @@ export const updatePassengerProfile = (profileData) => {
         }),
       );
 
-      toast.error(formattedError);
-
       setTimeout(() => {
         dispatch(profileActions.setError(null));
       }, 3000);
+
+      toast.error(formattedError);
     } finally {
       dispatch(profileActions.setLoading(false));
     }
@@ -112,13 +112,17 @@ export const changePassword = (passwordData) => {
 
       await dispatch(fetchProfile());
     } catch (error) {
-      dispatch(
-        profileActions.setError(
-          error.response?.data?.message ||
-            error.message ||
-            "Password update failed",
-        ),
-      );
+      const errorMessage = error.response?.data?.message;
+
+      let formattedError = "Password update failed";
+
+      if (typeof errorMessage === "string") {
+        formattedError = errorMessage;
+      } else if (typeof errorMessage === "object") {
+        formattedError = Object.values(errorMessage).join(", ");
+      }
+
+      dispatch(profileActions.setError(formattedError));
 
       dispatch(
         notificationActions.addNotification({
@@ -144,7 +148,7 @@ export const addMoney = (amount) => {
     try {
       dispatch(profileActions.setLoading(true));
       const response = await addMoneyToWallet(amount);
-      dispatch(profileActions.updateWallet(response.data.wallet));
+      dispatch(profileActions.updateWallet(response.data));
       toast.success("Money added successfully");
       dispatch(
         notificationActions.addNotification({
@@ -197,6 +201,7 @@ export const fetchPassengerBookings = () => {
       setTimeout(() => {
         dispatch(bookingActions.setError(null));
       }, 3000);
+
       toast.error("Bookings fetch failed");
     } finally {
       dispatch(bookingActions.setLoading(false));
@@ -346,13 +351,17 @@ export const bookTicket = (bookingData) => {
         }),
       );
     } catch (error) {
-      dispatch(
-        bookingActions.setError(
-          error.response?.data?.message ||
-            error.message ||
-            "Ticket booking failed",
-        ),
-      );
+      const errorMessage = error.response?.data?.message;
+
+      let formattedError = "Ticket booking failed";
+
+      if (typeof errorMessage === "string") {
+        formattedError = errorMessage;
+      } else if (typeof errorMessage === "object") {
+        formattedError = Object.values(errorMessage).join(", ");
+      }
+
+      dispatch(bookingActions.setError(formattedError));
 
       dispatch(
         notificationActions.addNotification({
@@ -365,6 +374,7 @@ export const bookTicket = (bookingData) => {
       setTimeout(() => {
         dispatch(bookingActions.setError(null));
       }, 3000);
+
       toast.error("Ticket booking failed");
     } finally {
       dispatch(bookingActions.setLoading(false));
@@ -383,6 +393,7 @@ export const refundBooking = (booking) => {
       dispatch(bookingActions.setLoading(true));
       await requestRefund(booking.bookingId);
       dispatch(bookingActions.cancelBooking(booking.bookingId));
+      dispatch(fetchActiveBookings());
       toast.success("Refund requested successfully");
 
       dispatch(

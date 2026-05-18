@@ -100,7 +100,7 @@ const CheckoutPage = () => {
         isOpen={isBookingConfirmationModalOpen}
         onClose={() => {
           setIsBookingConfirmationModalOpen(false);
-          navigate("/bookings");
+          navigate("/passenger/booking");
         }}
         booking={bookingResponse}
       />

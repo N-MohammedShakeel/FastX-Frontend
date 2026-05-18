@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { FaUser, FaLock, FaPlus } from "react-icons/fa";
-import WalletD2 from "../../components/passenger/WalletD2";
-import ContactCard from "../../components/common/ContactCard";
+import { FaUser, FaLock, FaBus, FaRoute, FaWallet } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addMoney,
-  changePassword,
-  fetchProfile,
-  updatePassengerProfile,
-} from "../../store/passenger/passenger-actions";
 import { toast } from "react-toastify";
+import OperatorLayout from "../../components/operator/OperatorLayout";
+import WalletD1 from "../../components/common/WalletD1";
+import ContactCard from "../../components/common/ContactCard";
+import EditProfileModal from "../../components/common/EditProfileModal";
 import Loading from "../../components/common/Loading";
 import Error from "../../components/common/Error";
-import EditProfileModal from "../../components/common/EditProfileModal";
-import PassengerLayout from "../../components/passenger/PassengerLayout";
+import {
+  fetchOperatorProfile,
+  editOperatorProfile,
+  changeOperatorPassword,
+} from "../../store/operator/operator-actions";
 
-export default function UserProfile() {
+const OperatorProfile = () => {
+  const dispatch = useDispatch();
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
@@ -23,24 +24,19 @@ export default function UserProfile() {
     confirmPassword: "",
   });
 
-  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.operatorProfile.profile);
+  const loading = useSelector((state) => state.operatorProfile.loading);
+  const error = useSelector((state) => state.operatorProfile.error);
 
-  const profile = useSelector((state) => state.profile.profile);
-  const passwordSuggestion = useSelector(
-    (state) =>
-      state.profile.profile?.provider === "GOOGLE" &&
-      !state.profile.profile?.passwordChanged,
-  );
-
-  const profileLoading = useSelector((state) => state.profile.loading);
-  const profileError = useSelector((state) => state.profile.error);
+  const passwordSuggestion =
+    profile?.provider === "GOOGLE" && !profile?.passwordChanged;
 
   useEffect(() => {
-    dispatch(fetchProfile());
+    dispatch(fetchOperatorProfile());
   }, [dispatch]);
 
   useEffect(() => {
-    if (profile?.provider === "GOOGLE" && passwordSuggestion) {
+    if (passwordSuggestion) {
       setPasswordData((prev) => ({
         ...prev,
         oldPassword: "sample",
@@ -51,29 +47,18 @@ export default function UserProfile() {
         oldPassword: "",
       }));
     }
-  }, [profile, passwordSuggestion]);
+  }, [passwordSuggestion]);
 
   const handleProfileUpdate = async (data) => {
-    await dispatch(updatePassengerProfile(data));
+    await dispatch(editOperatorProfile(data));
     setIsEditOpen(false);
   };
-
-  if (profileLoading) {
-    return <Loading message="Loading profile..." />;
-  }
-
-  if (profileError) {
-    return <Error message={profileError} />;
-  }
 
   const handleUpdatePassword = () => {
     if (
       !passwordData.oldPassword ||
       !passwordData.newPassword ||
-      !passwordData.confirmPassword ||
-      passwordData.oldPassword.trim() === "" ||
-      passwordData.newPassword.trim() === "" ||
-      passwordData.confirmPassword.trim() === ""
+      !passwordData.confirmPassword
     ) {
       toast.error("Please fill in all password fields");
       return;
@@ -85,7 +70,7 @@ export default function UserProfile() {
     }
 
     dispatch(
-      changePassword({
+      changeOperatorPassword({
         oldPassword: passwordData.oldPassword,
         newPassword: passwordData.newPassword,
       }),
@@ -98,25 +83,38 @@ export default function UserProfile() {
     });
   };
 
+  if (loading) {
+    return (
+      <OperatorLayout>
+        <Loading message="Loading profile..." />
+      </OperatorLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <OperatorLayout>
+        <Error message={error} />
+      </OperatorLayout>
+    );
+  }
+
   return (
     <>
-      <PassengerLayout mainClassName="px-4 sm:px-6 lg:px-10 py-6 lg:py-8">
+      <OperatorLayout mainClassName="px-4 sm:px-6 lg:px-10 py-6 lg:py-8">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex md:flex-row flex-col gap-8 justify-between items-center">
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="space-y-2">
               <h1 className="text-3xl lg:text-4xl font-black text-slate-900">
-                Account Profile
+                Operator Profile
               </h1>
 
               <p className="text-slate-500 text-sm sm:text-base">
-                Manage your personal details, wallet, and security settings
+                Manage your fleet account, security, and operational details
               </p>
             </div>
 
-            <WalletD2
-              balance={profile?.wallet}
-              onAddMoney={(amount) => dispatch(addMoney(amount))}
-            />
+            <WalletD1 balance={profile?.wallet || 0} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-6">
@@ -130,11 +128,11 @@ export default function UserProfile() {
 
                     <div>
                       <h2 className="text-xl font-bold text-slate-900">
-                        Personal Details
+                        Operator Details
                       </h2>
 
                       <p className="text-sm text-slate-500">
-                        Your account information
+                        Fleet owner information
                       </p>
                     </div>
                   </div>
@@ -151,7 +149,7 @@ export default function UserProfile() {
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div className="space-y-1">
                       <p className="text-xs uppercase tracking-widest text-slate-400 font-bold">
-                        Full Name
+                        Operator Name
                       </p>
 
                       <div className="bg-slate-50 rounded-2xl px-4 py-3 font-semibold text-slate-800">
@@ -189,6 +187,7 @@ export default function UserProfile() {
                       </div>
                     </div>
                   </div>
+
                   <div className="space-y-1">
                     <p className="text-xs uppercase tracking-widest text-slate-400 font-bold">
                       Address
@@ -200,8 +199,10 @@ export default function UserProfile() {
                   </div>
                 </div>
               </div>
+
               <ContactCard />
             </div>
+
             <div className="space-y-6">
               {passwordSuggestion && (
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
@@ -215,6 +216,7 @@ export default function UserProfile() {
                   </p>
                 </div>
               )}
+
               <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center">
@@ -227,7 +229,7 @@ export default function UserProfile() {
                     </h2>
 
                     <p className="text-sm text-slate-500">
-                      Update your password securely
+                      Update your account password
                     </p>
                   </div>
                 </div>
@@ -242,15 +244,14 @@ export default function UserProfile() {
                       type="password"
                       placeholder="Enter current password"
                       value={passwordData.oldPassword}
+                      disabled={passwordSuggestion}
                       onChange={(e) =>
                         setPasswordData({
                           ...passwordData,
                           oldPassword: e.target.value,
                         })
                       }
-                      disabled={passwordSuggestion}
-                      required
-                      className="w-full h-12 px-4 rounded-2xl bg-slate-100 border border-transparent focus:border-[#005CAB] outline-none"
+                      className="w-full h-12 px-4 rounded-2xl bg-slate-100 border border-transparent focus:border-[#005CAB] outline-none disabled:opacity-60"
                     />
                   </div>
 
@@ -269,7 +270,6 @@ export default function UserProfile() {
                           newPassword: e.target.value,
                         })
                       }
-                      required
                       className="w-full h-12 px-4 rounded-2xl bg-slate-100 border border-transparent focus:border-[#005CAB] outline-none"
                     />
                   </div>
@@ -289,7 +289,6 @@ export default function UserProfile() {
                           confirmPassword: e.target.value,
                         })
                       }
-                      required
                       className="w-full h-12 px-4 rounded-2xl bg-slate-100 border border-transparent focus:border-[#005CAB] outline-none"
                     />
                   </div>
@@ -305,15 +304,17 @@ export default function UserProfile() {
             </div>
           </div>
         </div>
-      </PassengerLayout>
+      </OperatorLayout>
 
       <EditProfileModal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
         profile={profile}
         onSave={handleProfileUpdate}
-        loading={profileLoading}
+        loading={loading}
       />
     </>
   );
-}
+};
+
+export default OperatorProfile;

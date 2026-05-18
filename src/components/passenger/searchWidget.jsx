@@ -28,7 +28,7 @@ const SearchWidget = () => {
       return;
     }
 
-    navigate("/search", {
+    navigate("/passenger/search", {
       state: {
         origin: trimmedOrigin,
         destination: trimmedDestination,

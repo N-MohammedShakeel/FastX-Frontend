@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerPassenger, registerOperator } from "../services/authService";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -177,6 +178,7 @@ export default function SignUp() {
       console.log(apiResponse.message);
 
       navigate("/signin");
+      toast.success("Registration successful! Please log in.");
     } catch (error) {
       console.log(error);
 

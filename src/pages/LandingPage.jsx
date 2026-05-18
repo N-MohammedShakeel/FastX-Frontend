@@ -9,7 +9,7 @@ const LandingPage = () => {
       title: "London to Paris",
       tag: "Popular",
       duration: "6 hrs",
-      price: "From £49",
+      price: "From ₹49",
       image:
         "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1200&auto=format&fit=crop",
       tagColor: "bg-blue-100 text-slate-600",
@@ -18,7 +18,7 @@ const LandingPage = () => {
       title: "Paris to Lyon",
       tag: "Express",
       duration: "4 hrs",
-      price: "From £39",
+      price: "From ₹39",
       image:
         "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=1200&auto=format&fit=crop",
       tagColor: "bg-blue-100 text-slate-600",
@@ -27,16 +27,16 @@ const LandingPage = () => {
       title: "Berlin to Prague",
       tag: "Limited",
       duration: "5 hrs",
-      price: "From £44",
+      price: "From ₹44",
       image:
         "https://images.unsplash.com/photo-1541849546-216549ae216d?q=80&w=1200&auto=format&fit=crop",
       tagColor: "bg-red-600 text-white",
     },
     {
-      title: "Madrid to Porto",
+      title: "Madrid to Washington D.C.",
       tag: "Comfort",
       duration: "7 hrs",
-      price: "From £52",
+      price: "From ₹52",
       image:
         "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1200&auto=format&fit=crop",
       tagColor: "bg-blue-100 text-slate-600",
@@ -89,7 +89,7 @@ const LandingPage = () => {
 
       <section id="popular" className="bg-[#F5F3F3] py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="mb-12 flex flex-col gap-6 md:flex-row ">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#005CAB]">
                 Most booked
@@ -98,11 +98,6 @@ const LandingPage = () => {
                 Popular Routes
               </h2>
             </div>
-
-            <button className="flex items-center gap-2 text-base font-semibold text-[#005CAB] hover:underline">
-              View all routes
-              <i className="fas fa-arrow-right text-xs"></i>
-            </button>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">

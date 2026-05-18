@@ -13,7 +13,7 @@ export const SeatSelectionSummary = ({
   const total = selectedSeats.length * fare;
 
   const handleContinue = () => {
-    navigate("/checkout", {
+    navigate("/passenger/checkout", {
       state: {
         busId,
         selectedSeats,
