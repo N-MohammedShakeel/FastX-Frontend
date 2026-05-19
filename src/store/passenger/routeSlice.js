@@ -11,11 +11,24 @@ const applyFilters = (buses, filters) => {
 
   if (filters.types.length > 0) {
     updated = updated.filter((bus) => {
-      const busType = `${bus.ac ? "AC" : "Non-AC"} ${
-        bus.sleeper ? "Sleeper" : "Seater"
-      }`;
+      return filters.types.some((type) => {
+        switch (type) {
+          case "AC Sleeper":
+            return bus.ac && bus.sleeper;
 
-      return filters.types.includes(busType);
+          case "Non-AC Sleeper":
+            return !bus.ac && bus.sleeper;
+
+          case "AC Seater":
+            return bus.ac && !bus.sleeper;
+
+          case "Non-AC Seater":
+            return !bus.ac && !bus.sleeper;
+
+          default:
+            return false;
+        }
+      });
     });
   }
 
@@ -45,7 +58,6 @@ const routeSlice = createSlice({
     filteredBuses: [],
     loading: false,
     error: null,
-
     filters: initialFilters,
   },
 

@@ -100,7 +100,7 @@ const BusFormModal = ({
     onSave({
       name: formData.name,
       busNumber: formData.busNumber,
-      busCategory: formData.busCategory,
+      busCategory: formData.busCategory.toUpperCase(),
       noOfSeats: Number(formData.noOfSeats),
       fare: Number(formData.fare),
 
@@ -113,6 +113,21 @@ const BusFormModal = ({
       chargingPoint: formData.chargingPoint,
 
       routeId: Number(formData.routeId),
+    });
+    
+
+    setFormData({
+      name: "",
+      busNumber: "",
+      busCategory: "",
+      noOfSeats: "",
+      fare: "",
+      type: "AC_SLEEPER",
+      waterBottle: false,
+      blanket: false,
+      tv: false,
+      chargingPoint: false,
+      routeId: "",
     });
   };
 
@@ -253,7 +268,7 @@ const BusFormModal = ({
 
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                  Fare
+                  Fare Per Seat
                 </label>
 
                 <input

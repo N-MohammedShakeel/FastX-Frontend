@@ -47,7 +47,7 @@ const SearchTickets = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          <div className="hidden lg:block w-70 shrink-0">
+          <div className="hidden lg:block w-70 shrink-0 self-start sticky top-6">
             <FilterSidebar />
           </div>
 

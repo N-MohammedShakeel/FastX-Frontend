@@ -82,6 +82,7 @@ export const createBus = (payload) => {
     try {
       dispatch(operatorBusActions.setLoading(true));
       const response = await addBus(payload);
+      console.log(payload);
       dispatch(operatorBusActions.addBus(response.data));
       dispatch(fetchRoutesAction());
       toast.success("Bus added successfully");

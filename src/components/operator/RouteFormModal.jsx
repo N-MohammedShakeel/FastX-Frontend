@@ -60,7 +60,15 @@ const RouteFormModal = ({
           </div>
 
           <button
-            onClick={onClose}
+            onClick={() => {
+              onClose();
+              setFormData({
+                origin: "",
+                destination: "",
+                departureTime: "",
+                durationInMinutes: "",
+              });
+            }}
             className="w-11 h-11 rounded-2xl bg-slate-100 hover:bg-slate-200 transition"
           >
             ✕
@@ -166,13 +174,20 @@ const RouteFormModal = ({
           </div>
 
           <button
-            onClick={() =>
+            onClick={() => {
               onSave({
                 ...formData,
                 durationInMinutes: Number(formData.durationInMinutes),
                 departureTime: new Date(formData.departureTime).toISOString(),
-              })
-            }
+              });
+
+              setFormData({
+                origin: "",
+                destination: "",
+                departureTime: "",
+                durationInMinutes: "",
+              });
+            }}
             disabled={loading}
             className="w-full h-14 rounded-2xl bg-linear-to-r from-[#005CAB] to-[#0075D7] text-white font-bold shadow-xl hover:scale-[1.01] transition disabled:opacity-60"
           >

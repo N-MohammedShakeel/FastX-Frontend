@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { routeActions } from "../../../store/passenger/routeSlice";
 
@@ -19,6 +19,16 @@ const FilterSidebar = () => {
   ];
   const amenitiesList = ["Charging", "Water", "Blanket", "TV"];
 
+  useEffect(() => {
+    dispatch(
+      routeActions.setFilters({
+        types: selectedTypes,
+        maxFare: Number(fare),
+        amenities: selectedAmenities,
+      }),
+    );
+  }, [selectedTypes, fare, selectedAmenities, dispatch]);
+
   const toggleType = (type) => {
     setSelectedTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
@@ -28,16 +38,6 @@ const FilterSidebar = () => {
   const toggleAmenity = (item) => {
     setSelectedAmenities((prev) =>
       prev.includes(item) ? prev.filter((a) => a !== item) : [...prev, item],
-    );
-  };
-
-  const handleApply = () => {
-    dispatch(
-      routeActions.setFilters({
-        types: selectedTypes,
-        maxFare: Number(fare),
-        amenities: selectedAmenities,
-      }),
     );
   };
 
@@ -86,7 +86,7 @@ const FilterSidebar = () => {
           <input
             type="range"
             min={500}
-            max={2000}
+            max={8000}
             value={fare}
             onChange={(e) => setFare(e.target.value)}
             className="w-full"
@@ -117,15 +117,6 @@ const FilterSidebar = () => {
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="pt-4">
-        <button
-          onClick={handleApply}
-          className="w-full h-12 rounded-xl bg-linear-to-r from-[#005CAB] to-[#0075D7] text-white font-bold shadow-lg"
-        >
-          Apply Filters
-        </button>
       </div>
     </div>
   );

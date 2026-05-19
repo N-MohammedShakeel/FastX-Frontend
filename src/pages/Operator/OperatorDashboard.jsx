@@ -12,6 +12,8 @@ import {
 } from "../../store/operator/operator-actions";
 import DeleteConfirmModal from "../../components/common/DeleteConfirmModal";
 import BookingFormModal from "../../components/operator/BookingFormModal";
+import Loading from "../../components/common/Loading";
+import Error from "../../components/common/Error";
 
 const OperatorDashboard = () => {
   const dispatch = useDispatch();
