@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../services/authService";
+import { loginUser, forgotPassword } from "../services/authService";
+import ForgotPasswordModal from "../components/common/ForgotPasswordModal";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isForgotOpen, setIsForgotOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -288,7 +290,11 @@ export default function SignIn() {
               </div>
 
               <div className="text-right text-sm">
-                <button type="button" className="text-[#005CAB] font-semibold">
+                <button
+                  type="button"
+                  onClick={() => setIsForgotOpen(true)}
+                  className="text-[#005CAB] font-semibold"
+                >
                   Forgot password?
                 </button>
               </div>
@@ -348,6 +354,11 @@ export default function SignIn() {
           </div>
         </div>
       </div>
+
+      <ForgotPasswordModal
+        isOpen={isForgotOpen}
+        onClose={() => setIsForgotOpen(false)}
+      />
     </div>
   );
 }

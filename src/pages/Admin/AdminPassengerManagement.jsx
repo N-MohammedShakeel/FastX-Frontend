@@ -169,6 +169,7 @@ const AdminPassengerManagement = () => {
                   <th className="text-left px-6 py-4">Gender</th>
                   <th className="text-left px-6 py-4">Wallet</th>
                   <th className="text-left px-6 py-4">Provider</th>
+                  <th className="text-left px-6 py-4">Status</th>
                   <th className="text-left px-8 py-4">Actions</th>
                 </tr>
               </thead>
@@ -231,6 +232,18 @@ const AdminPassengerManagement = () => {
                         }`}
                       >
                         {passenger.provider}
+                      </span>
+                    </td>
+                    <td className="px-6 py-5">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-bold
+                          ${
+                            passenger.active
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-red-100 text-red-600"
+                          }`}
+                      >
+                        {passenger.active ? "ACTIVE" : "INACTIVE"}
                       </span>
                     </td>
 
