@@ -10,13 +10,7 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 
-const BookingFormModal = ({
-  isOpen,
-  onClose,
-  booking,
-  onCancelBooking,
-  loading = false,
-}) => {
+const BookingFormModal = ({ isOpen, onClose, booking }) => {
   if (!isOpen || !booking) return null;
 
   const getStatusColor = (status) => {
@@ -54,7 +48,7 @@ const BookingFormModal = ({
 
           <button
             onClick={onClose}
-            className="w-11 h-11 rounded-2xl bg-slate-100 hover:bg-slate-200 transition"
+            className="p-3 rounded-2xl bg-slate-100 hover:bg-slate-200 transition"
           >
             close
           </button>
@@ -167,19 +161,6 @@ const BookingFormModal = ({
             </div>
           </div>
         </div>
-
-        {(booking.status === "CONFIRMED" ||
-          booking.status === "PROCESSING") && (
-          <div className="px-8 pb-8">
-            <button
-              onClick={() => onCancelBooking(booking.bookingId)}
-              disabled={loading}
-              className="w-full h-14 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-bold transition disabled:opacity-60"
-            >
-              {loading ? "Cancelling..." : "Cancel Booking"}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
