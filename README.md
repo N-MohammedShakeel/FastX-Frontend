@@ -1,16 +1,42 @@
-# React + Vite
+# FastX - Bus Ticket Booking System Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the user interface for the FastX Bus Ticket Booking platform. It is a modern web application built with React and Vite, designed to consume the FastX REST API backend. The application provides an intuitive interface for passengers, bus operators, and administrators to manage accounts, search routes, and book tickets.
 
-Currently, two official plugins are available:
+## Features Included
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- User Authentication: Forms for registration, login, and Google OAuth2 integration for passengers and operators.
+- Passenger Dashboard: Interface to manage profiles, view wallets, search routes, check available seats, and book tickets.
+- Operator Dashboard: UI tools for operators to manage buses, routes, view bookings, and process refund requests.
+- Admin Panel: Management views to oversee system users, active routes, and global booking history.
+- Responsive Design: Built to provide a consistent user experience across desktop and mobile devices.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 18
+- Vite (with Hot Module Replacement)
+- JavaScript
+- ESLint (for code quality linting)
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Before running the application, ensure you have the following installed:
+
+- Node.js (version 18 or higher recommended)
+- npm (comes bundled with Node.js)
+- Running instance of the FastX backend API
+
+## Installation and Setup
+
+1. Clone the repository:
+   git clone https://github.com
+
+2. Navigate into the project directory:
+   cd FastX-Frontend
+
+3. Install the required dependencies:
+   npm install
+
+4. Start the local development server:
+   npm run dev
+
+The application will open locally, typically at http://localhost:5173.
