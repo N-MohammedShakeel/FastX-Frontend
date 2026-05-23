@@ -94,23 +94,23 @@ FastX supports both local authentication and Google OAuth login.
 
 ### Landing Page
 
-![Landing Page](asset/1%20landing%20page.png)
+![Landing Page](assets/1-landing-page.png)
 
 ### Signup (Desktop)
 
-![Signup Laptop UI](asset/2%20signup%20laptop%20ui.png)
+![Signup Laptop UI](assets/2-signup-laptop-ui.png)
 
 ### Signup (Mobile)
 
-![Signup Mobile UI](asset/3%20signup%20mobile%20ui.png)
+![Signup Mobile UI](assets/3-signup-mobile-ui.png)
 
 ### Signin (Desktop)
 
-![Signin Laptop UI](asset/4%20signin%20laptop%20ui.png)
+![Signin Laptop UI](assets/4-signin-laptop-ui.png)
 
 ### Signin (Mobile)
 
-![Signin Mobile UI](asset/5%20signin%20mobile%20ui.png)
+![Signin Mobile UI](assets/5-signin-mobile-ui.png)
 
 ---
 
@@ -120,79 +120,79 @@ Passengers can search buses, book seats, manage profiles, track bookings, reques
 
 ## Passenger Dashboard
 
-![Passenger Dashboard](asset/6%20passenger%20dashboard.png)
+![Passenger Dashboard](assets/6-passenger-dashboard.png)
 
 ## Search Available Buses
 
 Passengers can search buses based on route and travel details.
 
-![Passenger Find Buses](asset/7%20passenger%20find%20busses.png)
+![Passenger Find Buses](assets/7-passenger-find-busses.png)
 
 ## Booking Management
 
 Passengers can manage and track bookings.
 
-![Passenger Booking Management](asset/8%20passenger%20bookings%20management.png)
+![Passenger Booking Management](assets/8-passenger-bookings-management.png)
 
 ## OAuth Initial Profile Completion
 
 Google OAuth users complete profile setup after authentication.
 
-![OAuth Initial User Profile](asset/9%20oauth%20initial%20user%20profile.png)
+![OAuth Initial User Profile](assets/9-oauth-initial-user-profile.png)
 
 ## Profile Management
 
 Passengers can edit profile information and update password.
 
-![Local User Profile](asset/10%20local%20user%20profile%20or%20oauth%20profile%20after%20setting%20passwrod.png)
+![Local User Profile](assets/10-local-user-profile-or-oauth-profile-after-setting-passwrod.png)
 
 ## Ticket Details Modal
 
 Detailed ticket information with booking details.
 
-![Ticket Details Modal](asset/11%20ticket%20details%20model.png)
+![Ticket Details Modal](assets/11-ticket-details-model.png)
 
 ## Seat Selection
 
 Passengers can choose available seats before booking.
 
-![Seat Selection](asset/12%20seat%20selection%20page.png)
+![Seat Selection](assets/12-seat-selection-page.png)
 
 ## Checkout Page
 
 Wallet-based booking flow for ticket confirmation.
 
-![Checkout Page](asset/13%20checkout%20page.png)
+![Checkout Page](assets/13-checkout-page.png)
 
 ## Booking Confirmation Modal
 
 Confirmation after successful booking.
 
-![Booking Confirmation Modal](asset/14%20booking%20confirmation%20model.png)
+![Booking Confirmation Modal](assets/14-booking-confirmation-model.png)
 
 ## Booking Confirmation Email
 
 Passengers receive booking confirmation through email.
 
-![Booking Confirmation Email](asset/15%20booking%20confirmation%20email.png)
+![Booking Confirmation Email](assets/15-booking-confirmation-email.png)
 
 ## E-Ticket PDF
 
 Generated PDF ticket after successful booking.
 
-![E-Ticket PDF](asset/15%20E-Ticket%20pdf.png)
+![E-Ticket PDF](assets/15-E-Ticket-pdf.png)
 
 ## Edit Profile Modal
 
 Update passenger details.
 
-![Edit Profile Modal](asset/16%20edit%20profile%20modal.png)
+![Edit Profile Modal](assets/16-edit-profile-modal.png)
 
 ## Refund Request Modal
 
 Passengers can request refunds for bookings.
 
-![Refund Request Modal](asset/17%20refund%20request%20modal.png)
+![Refund Request Modal](assets/17-refund-request-modal.png)
 
 ---
 
@@ -204,61 +204,61 @@ Bus operators manage buses, routes, bookings, refunds, and operational analytics
 
 Overview of operational data and statistics.
 
-![Operator Dashboard](asset/18%20operator%20dashboard.png)
+![Operator Dashboard](assets/18-operator-dashboard.png)
 
 ## Booking Details Modal
 
 Detailed booking information for operators.
 
-![Booking Details Modal](asset/20%20Booking%20Details%20Modal.png)
+![Booking Details Modal](assets/20-Booking-Details-Modal.png)
 
 ## Bus Management
 
 Operators can manage buses.
 
-![Bus Management Page](asset/21%20bus%20mnagement%20page.png)
+![Bus Management Page](assets/21-bus-management-page.png)
 
 ## Add / Update Bus
 
 Modal for creating or updating bus information.
 
-![Bus Modal](asset/22%20add%20bus%20-%20update%20bus%20modal.png)
+![Bus Modal](assets/22-add-bus-update-bus-modal.png)
 
 ## Route Management
 
 Manage travel routes and schedules.
 
-![Route Management](asset/23%20operator%20route%20management%20page.png)
+![Route Management](assets/23-operator-route-management-page.png)
 
 ## Add / Update Route
 
 Modal for route management.
 
-![Route Modal](asset/24%20add%20route%20-%20update%20route%20modal.png)
+![Route Modal](assets/24-add-route-update-route-modal.png)
 
 ## Operator Booking Management
 
 Manage booking records.
 
-![Operator Booking Management](asset/24%20operator%20booking%20management%20page.png)
+![Operator Booking Management](assets/24-operator-booking-management-page.png)
 
 ## Refund Management
 
 Approve or reject passenger refund requests.
 
-![Operator Refund Management](asset/25%20operator%20refund%20management%20page.png)
+![Operator Refund Management](assets/25-operator-refund-management-page.png)
 
 ## Delete Confirmation Modal
 
 Confirmation for delete actions.
 
-![Delete Confirmation Modal](asset/26%20delete%20confirmation%20modal.png)
+![Delete Confirmation Modal](assets/26-delete-confirmation-modal.png)
 
 ## Refund Approval Modal
 
 Approve refund requests.
 
-![Approve Confirmation Modal](asset/27%20approve%20confirmation%20modal.png)
+![Approve Confirmation Modal](assets/27-approve-confirmation-modal.png)
 
 ---
 
@@ -270,31 +270,31 @@ Administrators manage platform-wide data and system operations.
 
 High-level system overview.
 
-![Admin Dashboard](asset/28%20admin%20dashboard.png)
+![Admin Dashboard](assets/28-admin-dashboard.png)
 
 ## Passenger Management
 
 Manage registered passengers.
 
-![Passenger Management](asset/29%20passenger%20management.png)
+![Passenger Management](assets/29-passenger-management.png)
 
 ## Operator Management
 
 Manage bus operators.
 
-![Operator Management](asset/30%20operator%20management.png)
+![Operator Management](assets/30-operator-management.png)
 
 ## Booking Management
 
 View and manage booking data.
 
-![Admin Booking Management](asset/31%20admin%20booking%20management.png)
+![Admin Booking Management](assets/31-admin-booking-management.png)
 
 ## Route Management
 
 Manage routes across the platform.
 
-![Admin Route Management](asset/32%20admin%20route%20management.png)
+## ![Admin Route Management](assets/32-admin-route-management.png)
 
 ---
 
